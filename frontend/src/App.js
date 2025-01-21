@@ -30,10 +30,7 @@ function App() {
             ) : isRegistering ? (
                 <Register onRegister={handleRegister} />
             ) : (
-                <Login onLogin={handleLogin} />
-            )}
-            {!isRegistering && !isLoggedIn && (
-                <button onClick={() => setIsRegistering(true)}>Go to Register</button>
+                <Login onLogin={handleLogin} goToRegister={() => setIsRegistering(true)} />
             )}
         </div>
     );

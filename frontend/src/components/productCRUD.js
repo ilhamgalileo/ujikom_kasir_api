@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './productCRUD.css';
 
 const ProductCRUD = () => {
     const [products, setProducts] = useState([]);
@@ -41,9 +42,9 @@ const ProductCRUD = () => {
     }, []);
 
     return (
-        <div className="container">
-            <h1>CRUD Kasir</h1>
-            <form onSubmit={(e) => e.preventDefault()}>
+        <div className="crud-container">
+            <h1>Product Manager</h1>
+            <form onSubmit={(e) => e.preventDefault()} className="crud-form">
                 <input
                     type="text"
                     placeholder="Product Name"
@@ -56,19 +57,19 @@ const ProductCRUD = () => {
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
                 />
-                 <input
+                <input
                     type="number"
                     placeholder="Stock"
                     value={stock}
                     onChange={(e) => setStock(e.target.value)}
                 />
                 {editing ? (
-                    <button onClick={updateProduct}>Update</button>
+                    <button onClick={updateProduct} className="btn btn-primary">Update</button>
                 ) : (
-                    <button onClick={addProduct}>Add</button>
+                    <button onClick={addProduct} className="btn btn-success">Add</button>
                 )}
             </form>
-            <table>
+            <table className="crud-table">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -85,6 +86,7 @@ const ProductCRUD = () => {
                             <td>{product.stock}</td>
                             <td>
                                 <button
+                                    className="btn btn-edit"
                                     onClick={() => {
                                         setEditing(true);
                                         setCurrentId(product.id);
@@ -95,7 +97,12 @@ const ProductCRUD = () => {
                                 >
                                     Edit
                                 </button>
-                                <button onClick={() => deleteProduct(product.id)}>Delete</button>
+                                <button
+                                    className="btn btn-delete"
+                                    onClick={() => deleteProduct(product.id)}
+                                >
+                                    Delete
+                                </button>
                             </td>
                         </tr>
                     ))}

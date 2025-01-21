@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import './login.css';
 
-const Login = ({ onLogin }) => {
+const Login = ({ onLogin, goToRegister }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         try {
-            const response = await axios.post('http://localhost:5000/api/users/login', {
-                username,
-                password,
+            const response = await fetch('http://localhost:5000/api/users/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password }),
             });
 
-            const { token } = response.data;
+            if (!response.ok) throw new Error('Invalid username or password');
+
+            const { token } = await response.json();
             localStorage.setItem('token', token);
             onLogin();
         } catch (err) {
@@ -42,6 +44,10 @@ const Login = ({ onLogin }) => {
                 <button type="submit">Login</button>
             </form>
             {error && <p>{error}</p>}
+            <p>
+                Tidak punya akun?{' '}
+                <button onClick={goToRegister}>Daftar</button>
+            </p>
         </div>
     );
 };

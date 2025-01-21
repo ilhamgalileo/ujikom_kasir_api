@@ -46,24 +46,35 @@ export function loginUser(req, res) {
 export function registerUser(req, res) {
     const { username, password } = req.body;
 
+    // Validasi input
     if (!username || !password) {
         return res.status(400).json({ message: 'Username and password are required' });
     }
 
+    // Hash password sebelum disimpan
     bcrypt.hash(password, 10, (err, hashedPassword) => {
         if (err) throw err;
 
-        db.query('INSERT INTO users (username, password) VALUES (?, ?)'
-        [username, hashedPassword],
-            (err) => {
-                if (err) {
-                    return res.status(500).json({ message: 'Failed to register user' });
-                }
+        // Query untuk menyimpan data pengguna, dengan default role sebagai 'admin'
+        const role = 'petugas'; // Default role
+        const query = 'INSERT INTO users (username, password, role) VALUES (?, ?, ?)';
+        const values = [username, hashedPassword, role];
 
-                res.status(201).json({
-                    status: 'success',
-                    message: 'User registered successfully'
-                });
+        db.query(query, values, (err) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: 'Failed to register user' });
+            }
+
+            // Respon sukses
+            res.status(201).json({
+                status: 'success',
+                message: 'User registered successfully',
+                data: {
+                    username,
+                    role,
+                },
             });
+        });
     });
 }

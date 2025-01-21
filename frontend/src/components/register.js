@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import './register.css';
 
 const Register = ({ onRegister }) => {
     const [username, setUsername] = useState('');
@@ -10,7 +10,12 @@ const Register = ({ onRegister }) => {
         e.preventDefault();
 
         try {
-            await axios.post('http://localhost:5000/api/users/register', { username, password });
+            await fetch('http://localhost:5000/api/users/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password }),
+            });
+
             onRegister();
         } catch (err) {
             setError('Username sudah digunakan atau terjadi kesalahan.');
